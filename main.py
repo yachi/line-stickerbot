@@ -17,8 +17,6 @@ while True:
     get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(offset=last_update)).content)
     # Ok, I've got 'em. Let's iterate through each one
     for update in get_updates['result']:
-        print last_update
-        print update
         # First make sure I haven't read this update yet
         print (last_update < update['update_id'])
         if last_update < update['update_id']:
@@ -30,6 +28,7 @@ while True:
             # I've got a new update. Let's see what it is.
             if 'message' in update:
                 # It's a message! Let's send it back :D
-                subprocess.call("./imagedl.sh", shell=True)
+                filename = update['message']['text']
+                subprocess.call("./imagedl.sh " + filename, shell=True)
     # Let's wait a few seconds for new updates
     sleep(3)
