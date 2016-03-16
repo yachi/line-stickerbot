@@ -18,10 +18,8 @@ while True:
     # Ok, I've got 'em. Let's iterate through each one
     for update in get_updates['result']:
         # First make sure I haven't read this update yet
-        print (last_update < update['update_id'])
         if last_update < update['update_id']:
             last_update = update['update_id']
-            print last_update
             f = open( 'updatefile', 'w' )
             f.write(str(last_update))
             f.close()
@@ -29,6 +27,8 @@ while True:
             if 'message' in update:
                 # It's a message! Let's send it back :D
                 filename = update['message']['text']
-                subprocess.call("./imagedl.sh " + filename, shell=True)
+                user = update['message']['chat']['id']
+                print update['message']['from']['first_name'] + " (" + str(user) + ")"+ " requested " + filename
+                subprocess.call("./imagedl.sh " + filename + " " + str(user), shell=True)
     # Let's wait a few seconds for new updates
     sleep(3)
