@@ -1,6 +1,7 @@
 import requests
 import json
 from time import sleep
+import subprocess
 
 # This will mark the last update we've checked
 with open('updatefile', 'r') as f:
@@ -17,7 +18,7 @@ while True:
     # Ok, I've got 'em. Let's iterate through each one
     for update in get_updates['result']:
         print last_update
-        print update['update_id']
+        print update
         # First make sure I haven't read this update yet
         print (last_update < update['update_id'])
         if last_update < update['update_id']:
@@ -29,6 +30,6 @@ while True:
             # I've got a new update. Let's see what it is.
             if 'message' in update:
                 # It's a message! Let's send it back :D
-                requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=update['message']['text']))
+                subprocess.call("./imagedl.sh", shell=True)
     # Let's wait a few seconds for new updates
     sleep(3)
