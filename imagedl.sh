@@ -15,6 +15,6 @@ wget -i neweststickers -P stickerfolder
 cd stickerfolder
 convert *.png -filter sinc -resize 512x512 sticker.png
 zip stickers.zip ./sticker-*.png
-curl -F chat_id=$CHAT -F document=@"stickers.zip" https://api.telegram.org/bot216513681:AAE38YYorq8ox8k1Pnqprn862Ut31SPq3So/sendDocument
+curl -F chat_id=$CHAT -F document=@"stickers.zip" https://api.telegram.org/bot<token>/sendDocument
 cd ../..
 rm -rf store.line.me

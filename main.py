@@ -7,7 +7,7 @@ import subprocess
 with open('updatefile', 'r') as f:
     last_update = int(f.readline().strip())
 # Here, insert the token BotFather gave you for your bot.
-token = '216513681:AAE38YYorq8ox8k1Pnqprn862Ut31SPq3So'
+token = '<token>'
 # This is the url for communicating with your bot
 url = 'https://api.telegram.org/bot%s/' % token
 
