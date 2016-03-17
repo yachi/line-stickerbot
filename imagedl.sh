@@ -6,7 +6,7 @@ wget -q -x -p --convert-links $URL
 FIRST=${URL#"https://"}
 SECOND=${FIRST/stickershop\/product\/*\/*/''}
 cd $SECOND
-grep 'width: [0-9]*px; height: [0-9]*px; background-image:url(' ./stickershop/product/*/* > stickerlines
+grep 'width: [0-9]*px; height: [0-9]*px; background-image:url(' ./stickershop/product/*/\{\{imageurl\}\} > stickerlines
 sed 's/                          <span class=".*" style="width: [0-9]*px; height: [0-9]*px; background-image:url(//g' stickerlines >> newstickers
 sed 's/); background-size: [0-9]*px [0-9]*px;" data-sticker-id=".*"><\/span>//g' newstickers >> neweststickers
 rm stickerlines
