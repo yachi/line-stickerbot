@@ -16,5 +16,9 @@ cd stickerfolder
 convert *.png -filter sinc -resize 512x512 sticker.png
 zip -q stickers.zip ./sticker-*.png
 curl -s -F chat_id=$CHAT -F document=@"stickers.zip" https://api.telegram.org/bot<token>/sendDocument > /dev/null
-cd ../..
+cd ..
+rm -rf stickerfolder
+rm neweststickers
+cd ..
 rm -rf store.line.me
+cd ..
