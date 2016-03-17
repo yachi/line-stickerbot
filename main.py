@@ -2,6 +2,8 @@ import requests
 import json
 from time import sleep
 import subprocess
+from BeautifulSoup import BeautifulSoup
+import urllib2
 
 # This will mark the last update we've checked
 with open('updatefile', 'r') as f:
@@ -27,7 +29,9 @@ while True:
             if 'message' in update:
                 # It's a message! Let's send it back :D
                 filename = update['message']['text']
-                user = update['message']['chat']['id']
+                user = update['message']['chat']['id'] 
+                stickertitle = BeautifulSoup(urllib2.urlopen(filename)).title.string
+                requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text="Fetching \"" + stickertitle + "\""))
                 print update['message']['from']['first_name'] + " (" + str(user) + ")"+ " requested " + filename
                 subprocess.call("./imagedl.sh " + filename + " " + str(user), shell=True)
     # Let's wait a few seconds for new updates
