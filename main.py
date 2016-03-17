@@ -32,7 +32,7 @@ while True:
                 user = update['message']['chat']['id'] 
                 stickertitle = BeautifulSoup(urllib2.urlopen(filename)).title.string
                 requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text="Fetching \"" + stickertitle + "\""))
-                print update['message']['from']['first_name'] + " (" + str(user) + ")"+ " requested " + filename
+                print update['message']['from']['first_name'] + " " + update['message']['from']['last_name']+ " (" + str(user) + ")"+ " requested " + filename
                 subprocess.call("./imagedl.sh " + filename + " " + str(user), shell=True)
             else:
                  requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text="That doesn't appear to be a valid URL. To start, send me a URL that starts with \"https://store.line.me/stickershop/product/\""))
