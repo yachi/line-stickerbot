@@ -4,7 +4,7 @@ A Telegram bot for downloading Line stickers. It takes a URL sent to the bot fro
 ## How do I use it?
 Add [@line-stickerbot](http://telegram.me/line_stickerbot) on Telegram.
 
-Or, if you prefer to run it yourself, replace `<token>` with the token the Botfather gave you, and run `main.py`.
+Or, if you prefer to run it yourself, replace `<token>` in `main.py` and `imagedl.sh` with the token the Botfather gave you, and run `main.py`.
 
 ## Dependencies
 
