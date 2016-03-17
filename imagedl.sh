@@ -11,10 +11,10 @@ sed 's/                          <span class=".*" style="width: [0-9]*px; height
 sed 's/); background-size: [0-9]*px [0-9]*px;" data-sticker-id=".*"><\/span>//g' newstickers >> neweststickers
 rm stickerlines
 rm newstickers
-wget -i neweststickers -P stickerfolder
+wget -q -i neweststickers -P stickerfolder
 cd stickerfolder
 convert *.png -filter sinc -resize 512x512 sticker.png
-zip stickers.zip ./sticker-*.png
-curl -F chat_id=$CHAT -F document=@"stickers.zip" https://api.telegram.org/bot<token>/sendDocument
+zip -q stickers.zip ./sticker-*.png
+curl -s -F chat_id=$CHAT -F document=@"stickers.zip" https://api.telegram.org/bot<token>/sendDocument
 cd ../..
 rm -rf store.line.me
