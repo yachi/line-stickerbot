@@ -1,11 +1,13 @@
 import json
 import logging
 from time import sleep
+import urllib.request
 import requests
 import cssutils
 from bs4 import BeautifulSoup
-import urllib.request
 from wand.image import Image
+from zipfile import ZipFile
+import os
 
 cssutils.log.setLevel(logging.CRITICAL)
 
@@ -34,7 +36,6 @@ def dl_stickers(page):
         imageurl = imageurl.replace('url(', '').replace(')', '')
         response = urllib.request.urlopen(imageurl)
         resize_sticker(response, imageurl)
-    return 0
 
 def resize_sticker(image, filename):
     filen = filename[-7:]
@@ -45,10 +46,20 @@ def resize_sticker(image, filename):
             ratio = 512/img.height
         img.resize(int(img.width*ratio), int(img.height*ratio), 'mitchell')
         img.save(filename=("downloads/" + filen))
-    return 0
 
 def send_stickers(page):
     dl_stickers(page)
+    with ZipFile('stickers.zip', 'w') as stickerzip:
+        for root, dirs, files in os.walk("downloads/"):
+            for file in files:
+                stickerzip.write(os.path.join(root, file))
+                os.remove(os.path.join(root, file))
+    requests.post(URL + 'sendDocument', params=dict(
+        chat_id = update['message']['chat']['id']
+    ), files=dict(
+        document = open('stickers.zip', 'rb')
+    ))
+    print("snet;)")
 
 
 # We want to keep checking for updates. So this must be a never ending loop
