@@ -4,6 +4,8 @@ from time import sleep
 import requests
 import cssutils
 from bs4 import BeautifulSoup
+import urllib.request
+from wand.image import Image
 
 cssutils.log.setLevel(logging.CRITICAL)
 
@@ -23,15 +25,31 @@ LINE_URL = "https://store.line.me/stickershop/product/"
 WRONG_URL_TEXT = ("That doesn't appear to be a valid URL. "
                   "To start, send me a URL that starts with " + LINE_URL)
 
-def generate_stickers(page):
+def dl_stickers(page):
     images = page.find_all('span', attrs={"style": not ""})
     for i in images:
         imageurl = i['style']
         imageurl = cssutils.parseStyle(imageurl)
         imageurl = imageurl['background-image']
         imageurl = imageurl.replace('url(', '').replace(')', '')
-        print(imageurl)
+        response = urllib.request.urlopen(imageurl)
+        resize_sticker(response, imageurl)
     return 0
+
+def resize_sticker(image, filename):
+    filen = filename[-7:]
+    with Image(file=image) as img:
+        if img.width > img.height:
+            ratio = 512/img.width
+        if img.height > img.width:
+            ratio = 512/img.height
+        img.resize(int(img.width*ratio), int(img.height*ratio), 'mitchell')
+        img.save(filename=("downloads/" + filen))
+    return 0
+
+def send_stickers(page):
+    dl_stickers(page)
+
 
 # We want to keep checking for updates. So this must be a never ending loop
 while True:
@@ -60,8 +78,7 @@ while True:
                                  params=dict(chat_id=update['message']['chat']['id'],
                                              text="Fetching \"" + stickertitle + "\""))
                     print(name + " (" + str(user) + ")"+ " requested " + sticker_url)
-                    generate_stickers(stickerpage)
-                    #subprocess.call("./imagedl.sh " + filename + " " + str(user), shell=True)
+                    send_stickers(stickerpage)
                 else:
                     requests.get(URL + 'sendMessage',
                                  params=dict(chat_id=update['message']['chat']['id'],
