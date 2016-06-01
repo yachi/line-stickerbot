@@ -1,7 +1,12 @@
 import json
+import logging
 from time import sleep
 import requests
+import cssutils
 from bs4 import BeautifulSoup
+
+cssutils.log.setLevel(logging.CRITICAL)
+
 
 # This will mark the last update we've checked
 with open('updatefile', 'r') as f:
@@ -17,6 +22,16 @@ LINE_URL = "https://store.line.me/stickershop/product/"
 # The text to display when the sent URL doesn't match.
 WRONG_URL_TEXT = ("That doesn't appear to be a valid URL. "
                   "To start, send me a URL that starts with " + LINE_URL)
+
+def generate_stickers(page):
+    images = page.find_all('span', attrs={"style": not ""})
+    for i in images:
+        imageurl = i['style']
+        imageurl = cssutils.parseStyle(imageurl)
+        imageurl = imageurl['background-image']
+        imageurl = imageurl.replace('url(', '').replace(')', '')
+        print(imageurl)
+    return 0
 
 # We want to keep checking for updates. So this must be a never ending loop
 while True:
@@ -37,12 +52,15 @@ while True:
                     # It's a message! Let's send it back :D
                     sticker_url = update['message']['text']
                     user = update['message']['chat']['id']
-                    stickertitle = BeautifulSoup(requests.get(sticker_url).text, "html.parser").title.string
+                    request = requests.get(sticker_url).text
+                    stickerpage = BeautifulSoup(request, "html.parser")
+                    stickertitle = stickerpage.title.string
                     name = update['message']['from']['first_name']
                     requests.get(URL + 'sendMessage',
                                  params=dict(chat_id=update['message']['chat']['id'],
                                              text="Fetching \"" + stickertitle + "\""))
                     print(name + " (" + str(user) + ")"+ " requested " + sticker_url)
+                    generate_stickers(stickerpage)
                     #subprocess.call("./imagedl.sh " + filename + " " + str(user), shell=True)
                 else:
                     requests.get(URL + 'sendMessage',
@@ -51,5 +69,4 @@ while True:
     # Let's wait a few seconds for new updates
     sleep(1)
 
-def send_back(stickerurl):
-    return 0
+
