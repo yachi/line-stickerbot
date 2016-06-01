@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 with open('updatefile', 'r') as f:
     last_update = int(f.readline().strip())
 # Here, insert the token BotFather gave you for your bot.
-TOKEN = '171693148:AAFp3pHZoEca0hjgg2vZ-hjdCMlWmKLtQ1g'
+TOKEN = '<token>'
 # This is the url for communicating with your bot
 URL = 'https://api.telegram.org/bot%s/' % TOKEN
 
@@ -37,7 +37,7 @@ while True:
                     # It's a message! Let's send it back :D
                     sticker_url = update['message']['text']
                     user = update['message']['chat']['id']
-                    stickertitle = BeautifulSoup(requests.get(sticker_url)).title.string
+                    stickertitle = BeautifulSoup(requests.get(sticker_url).text, "html.parser").title.string
                     name = update['message']['from']['first_name']
                     requests.get(URL + 'sendMessage',
                                  params=dict(chat_id=update['message']['chat']['id'],
