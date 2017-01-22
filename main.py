@@ -2,11 +2,13 @@ import json
 import logging
 from time import sleep
 import urllib.request
+import urllib.parse
 import requests
 import cssutils
 from bs4 import BeautifulSoup
 from wand.image import Image
 from zipfile import ZipFile
+from OpenSSL import SSL
 import os
 
 cssutils.log.setLevel(logging.CRITICAL)
@@ -34,12 +36,14 @@ def dl_stickers(page):
         imageurl = cssutils.parseStyle(imageurl)
         imageurl = imageurl['background-image']
         imageurl = imageurl.replace('url(', '').replace(')', '')
+        imageurl = imageurl[1:-15]
         response = urllib.request.urlopen(imageurl)
         resize_sticker(response, imageurl)
 
 def resize_sticker(image, filename):
     filen = filename[-7:]
     with Image(file=image) as img:
+        ratio = 1
         if img.width > img.height:
             ratio = 512/img.width
         if img.height > img.width:
