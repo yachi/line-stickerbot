@@ -18,7 +18,7 @@ cssutils.log.setLevel(logging.CRITICAL)
 with open('updatefile', 'r') as f:
     last_update = int(f.readline().strip())
 # Here, insert the token BotFather gave you for your bot.
-TOKEN = '<token>'
+TOKEN = '322927795:AAH91dZ4dek74CQteG3Z4O4aOB0OUol6hjc'
 # This is the url for communicating with your bot
 URL = 'https://api.telegram.org/bot%s/' % TOKEN
 
