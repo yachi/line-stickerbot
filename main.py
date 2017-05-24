@@ -10,6 +10,7 @@ from wand.image import Image
 from zipfile import ZipFile
 from OpenSSL import SSL
 import os
+import hashlib
 
 cssutils.log.setLevel(logging.CRITICAL)
 
@@ -37,11 +38,14 @@ def dl_stickers(page):
         imageurl = imageurl['background-image']
         imageurl = imageurl.replace('url(', '').replace(')', '')
         imageurl = imageurl[1:-15]
+        print(imageurl)
         response = urllib.request.urlopen(imageurl)
         resize_sticker(response, imageurl)
 
 def resize_sticker(image, filename):
-    filen = filename[-7:]
+    filet = filename[-4:]
+    filen = hashlib.sha224(filename.encode('utf-8')).hexdigest() + filet
+    print(filen)
     with Image(file=image) as img:
         ratio = 1
         if img.width > img.height:
